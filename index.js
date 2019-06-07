@@ -18,7 +18,7 @@ var api = new ParseServer({
   restAPIKey : process.REST_API_KEY || 'restkey',
   masterKey: process.env.MASTER_KEY || 'masterkey', //Add your master key here. Keep it secret!
   javascriptKey: process.env.JAVASCRIPT_KEY || 'javascriptKey',
-
+  fileKey: process.env.FILE_KEY || 'myFileKey',
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
 });
 
