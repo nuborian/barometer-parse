@@ -5,18 +5,20 @@ var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 //mongodb://heroku_0fxcrsll:nrhh416al7hfta8fluorj00md7@ds147096.mlab.com:47096/heroku_0fxcrsll
-var databaseUri = process.env.DATABASE_URI || 'mongodb://localhost:27017/trainadoo';
+var databaseUri = process.env.DATABASE_URI || 'mongodb://localhost:27017/barometer';
 
 if (!databaseUri) {
   console.log('DATABASE_URI not specified, falling back to localhost.');
 }
 
 var api = new ParseServer({
-  databaseURI: databaseUri || 'mongodb://localhost:27017/trainadoo',
+  databaseURI: databaseUri, //|| 'mongodb://localhost:27017/barometer',
   cloud: process.env.CLOUD_CODE_MAIN || __dirname + '/cloud/main.js',
-  appId: process.env.APP_ID || 'trainadoo',
+  appId: process.env.APP_ID || 'barometer',
   restAPIKey : process.REST_API_KEY || 'restkey',
   masterKey: process.env.MASTER_KEY || 'masterkey', //Add your master key here. Keep it secret!
+  javascriptKey: process.env.JAVASCRIPT_KEY || 'javascriptKey',
+
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
 });
 
@@ -37,7 +39,7 @@ app.use(mountPath, api);
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', function(req, res) {
-  res.status(200).send('Parse Server Instance for Trainadoo.com');
+  res.status(200).send('Parse Server Instance for Barometer Mobile App');
 });
 
 // There will be a test page available on the /test path of your server url
