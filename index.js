@@ -20,6 +20,12 @@ var api = new ParseServer({
   javascriptKey: process.env.JAVASCRIPT_KEY || 'javascriptKey',
   fileKey: process.env.FILE_KEY || 'myFileKey',
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
+
+
+  liveQuery: {
+    classNames: ['Voucher']
+  }
+
 });
 
 //console.log("nico test",  databaseUri);
