@@ -23,48 +23,241 @@ const User = Parse.Object.extend("_User");
 const Company = Parse.Object.extend("Company");
 const Favorite = Parse.Object.extend("Favorite");
 const Location = Parse.Object.extend("Location");
+const Voucher = Parse.Object.extend("Voucher");
+const VoucherHistory = Parse.Object.extend("VoucherHistory");
+
+
 
 Parse.Cloud.define('checkFavorite', async (request) => {
+  console.log("SERVER ::::: checkFavorite")
 
-  if( request.params.userObjectId == null || request.params.locationObjectId == null){
+  var params = request.params;
+
+
+  try{
+    if( params.userObjectId == null || params.locationObjectId == null){
       return {
         isFavorite : false,
         msg : "userObjectId or locationObjectId is missing"
       }
-  }else{
-    var userPointer = {
-      __type: 'Pointer',
-      className: '_User',
-      objectId: request.params.userObjectId
-    }
-    var locationPointer = {
-      __type: 'Pointer',
-      className: 'Location',
-      objectId: request.params.locationObjectId
+    }else{
+      var userPointer = {
+        __type: 'Pointer',
+        className: '_User',
+        objectId: params.userObjectId
+      }
+      var locationPointer = {
+        __type: 'Pointer',
+        className: 'Location',
+        objectId: params.locationObjectId
+      }
+
+      var usr = new User({
+        objectId : params.userObjectId
+      });
+      var relation = usr.relation("favorites");
+
+      var q_favorites = relation.query();
+      q_favorites.equalTo("objectId", params.locationObjectId);
+
+      //q_favorites.fir
+      const _result = await q_favorites.first(null, {useMasterKey:true});
+      console.log("Results", _result);
+      if(_result == null){
+        return {
+          isFavorite : false,
+        }
+      }else{
+        return {
+          isFavorite : true,
+        }
+      }
     }
 
-    const query = new Parse.Query(Favorite);
-    query.equalTo("user", userPointer);
-    query.equalTo("location", locationPointer);
-    const results = await query.find(null, {useMasterKey:true});
-    //console.log(results[0].toJSON().objectId );
-    if(results[0] == null){
-      return {
-        isFavorite : false,
-        //msg : "userObjectId or locationObjectId is missing"
-      }
-    }else{
-      return {
-        isFavorite : true,
-        //msg : "userObjectId or locationObjectId is missing"
-      }
+  }catch(error){
+    console.error(error);
+  }
+
+
+});
+
+
+
+/**
+
+**/
+Parse.Cloud.define('addFavorite', async (request) => {
+  var params = request.params;
+
+  if( params.locationObjectId == null  || params.userObjectId == null){
+    return {
+      success : false,
+      msg : "locationObjectId or userObjectId is missing"
+    }
+  }
+
+  var usr = new User({
+    objectId : params.userObjectId
+  });
+  var _location = new Location({
+    objectId : params.locationObjectId
+  });
+
+  var relation = usr.relation("favorites");
+  relation.add(_location);
+  usr.save(null, {useMasterKey:true});
+});
+
+/**
+Add Favorite
+**/
+Parse.Cloud.define('removeFavorite', async (request) => {
+  var params = request.params;
+
+  if( params.locationObjectId == null  || params.userObjectId == null){
+    return {
+      success : false,
+      msg : "locationObjectId or userObjectId is missing"
+    }
+  }
+
+  var usr = new User({
+    objectId : params.userObjectId
+  });
+  var _location = new Location({
+    objectId : params.locationObjectId
+  });
+
+  var relation = usr.relation("favorites");
+  relation.remove(_location);
+  usr.save(null, {useMasterKey:true});
+});
+
+
+
+
+
+
+
+//
+// Vouchers
+//
+Parse.Cloud.define('checkCompanyPin', async (request) => {
+
+  var params = request.params;
+
+  // Check Params
+  if( params.pin == null || params.locationObjectId == null){
+    return {
+      success : false,
+      msg : "code or locationObjectId is missing"
     }
   }
 
 
+  // Location
+  var q_location = new Parse.Query(Location);
+  q_location.equalTo('objectId', params.locationObjectId);
+  q_location.select("pin");
+  q_location.first().then(function(response){
+    var result = response.toJSON();
+
+    // Verify Code
+    if( results.pin === params.pin ){
+      return true;
+    }else{
+      return false;
+    }
+  });
 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// Redeem Voucher
+// voucher objectId 8QoyKFjtBc
+// User ObjectId
+//
+Parse.Cloud.define('redeemVoucher', async (request) => {
+  var params = request.params;
+
+  // Check Params
+  if( params.voucherObjectId == null || params.userObjectId == null){
+    return {
+      success : false,
+      msg : "voucherObjectId or userObjectId is missing"
+    }
+  }
+
+
+  // fetch User
+  var q_user = new Parse.Query(User);
+  q_user.equalTo("objectId", params.userObjectId);
+  q_user.select("points");
+  const _usr = await q_user.first(null, {useMasterKey:true});
+
+  var q_voucher = new Parse.Query(Voucher);
+  q_voucher.equalTo("objectId", params.voucherObjectId);
+  const _voucher = await q_voucher.first(null, {useMasterKey:true});
+
+  var usrPoints     =  _usr.get("points");
+  var voucherCosts  =  _voucher.get("cost");
+
+  // Check Voucher
+  if( voucherCosts <= usrPoints ){
+    console.log("Voucher lässt sich einlösen");
+
+
+    // Distract Costs from user Points
+    // Create VoucherHistory ObjectId
+
+
+
+    return {
+      success : true,
+    }
+  }else{
+    return {
+      success : false,
+      msg : "voucherObjectId or userObjectId is missing"
+    }
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
