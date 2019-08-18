@@ -20,12 +20,6 @@ var api = new ParseServer({
   javascriptKey: process.env.JAVASCRIPT_KEY || 'javascriptKey',
   fileKey: process.env.FILE_KEY || 'myFileKey',
   serverURL: process.env.SERVER_URL || 'http://localhost:1337/parse',  // Don't forget to change to https if needed
-
-
-  liveQuery: {
-    classNames: ['Voucher']
-  }
-
 });
 
 //console.log("nico test",  databaseUri);
@@ -42,6 +36,8 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
+
+console.log("MountPath: " + mountPath);
 
 // Parse Server plays nicely with the rest of your web routes
 app.get('/', function(req, res) {
