@@ -185,7 +185,7 @@ Parse.Cloud.define("getVoucherForCompany", async (request) => {
 
   var q_voucher = new Parse.Query(Voucher);
   //q_voucher.equalTo('company', _company);
-  const results = await q_voucher.find()
+  const results = await q_voucher.first();
 
   return "yolo";
 });
