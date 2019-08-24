@@ -270,7 +270,7 @@ Parse.Cloud.define('redeemVoucher', async (request) => {
 // Search
 //
 //
-Parse.Cloud.define('fetchCompanies', async (request) => {
+Parse.Cloud.define('fetchLocations', async (request) => {
 
   var params = request.params;
 
