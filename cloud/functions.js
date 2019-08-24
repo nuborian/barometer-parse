@@ -25,7 +25,7 @@ const Favorite = Parse.Object.extend("Favorite");
 const Location = Parse.Object.extend("Location");
 const Voucher = Parse.Object.extend("Voucher");
 const VoucherHistory = Parse.Object.extend("VoucherHistory");
-
+const Tag = Parse.Object.extend("Tag");
 
 
 Parse.Cloud.define('checkFavorite', async (request) => {
@@ -260,6 +260,76 @@ Parse.Cloud.define('redeemVoucher', async (request) => {
 
 
 
+
+
+
+
+
+//
+//
+// Search
+//
+//
+Parse.Cloud.define('fetchCompanies', async (request) => {
+
+  var params = request.params;
+
+
+  if(params.searchparams){
+
+  }
+
+
+
+
+
+//  console.log(_results);
+
+
+  /*let query = new Parse.Query('Locations');
+  query.find().then(function(results) {
+     var result = results[0];
+     result.relation('tags').query().each(function(tags) {
+        console.log(tags);
+     });
+  });*/
+
+
+
+
+  //var tags = ["FVqUQeiuWI", "J3QanKBQCA"];
+  //for( var i = 0; i<tags.length; i++){
+    //var _qtag = new Tag({
+    //  objectId : tags[i]
+  //  });
+
+
+    //q_locations.equalTo("tags", _qtag);
+    //var fewWins = new Parse.Query("Location");
+    //fewWins.lessThan("wins", 5);
+
+  //}
+
+
+//  q_locations.containsAll("tags", ["FVqUQeiuWI", "J3QanKBQCA"]);
+
+  var q_locations = new Parse.Query(Location);
+  var _results = await q_locations.find();
+
+
+
+//
+  //console.log(_results[0])
+  //var res = await _results[0].relation("tags").query().each(function(tags) {
+  //   console.log(tags);
+  //});
+  //console.log(res);
+
+  return _results;
+
+
+
+});
 
 
 
