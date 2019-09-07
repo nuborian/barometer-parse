@@ -175,16 +175,16 @@ Parse.Cloud.define('checkCompanyPin', async (request) => {
 
 
 
-Parse.Cloud.define("getVoucherForCompany", async (request) => {
+Parse.Cloud.define("getVoucherForLocation", async (request) => {
   var params = request.params;
 
 
   // Create a new instance of that class.
-  var _company = new Company();
-  _company.id = params.companyObjectId
+  var _location = new Company();
+  _location.id = params.locationObjectId;
 
   var q_voucher = new Parse.Query(Voucher);
-  q_voucher.equalTo('company', _company);
+  q_voucher.equalTo('location', _location);
   const results = await q_voucher.find()
 
   return results;
@@ -281,6 +281,20 @@ Parse.Cloud.define('fetchLocations', async (request) => {
 
 
 
+    var q_locations = new Parse.Query(Location);
+    var _results = await q_locations.find();
+
+
+
+  //
+    //console.log(_results[0])
+    //var res = await _results[0].relation("tags").query().each(function(tags) {
+    //   console.log(tags);
+    //});
+    //console.log(res);
+
+    return _results;
+
 
 
 //  console.log(_results);
@@ -312,20 +326,6 @@ Parse.Cloud.define('fetchLocations', async (request) => {
 
 
 //  q_locations.containsAll("tags", ["FVqUQeiuWI", "J3QanKBQCA"]);
-
-  var q_locations = new Parse.Query(Location);
-  var _results = await q_locations.find();
-
-
-
-//
-  //console.log(_results[0])
-  //var res = await _results[0].relation("tags").query().each(function(tags) {
-  //   console.log(tags);
-  //});
-  //console.log(res);
-
-  return _results;
 
 
 
