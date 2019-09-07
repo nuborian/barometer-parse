@@ -179,6 +179,14 @@ Parse.Cloud.define("getVoucherForLocation", async (request) => {
   var params = request.params;
 
   console.log(params);
+
+  if(params.locationObjectId == null){
+    return {
+      code : "",
+      message : "No locationObjectId provided"
+    };
+  }
+
   // Create a new instance of that class.
   var _location = new Location();
   _location.id = params.locationObjectId;
