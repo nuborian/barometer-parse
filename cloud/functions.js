@@ -178,14 +178,16 @@ Parse.Cloud.define('checkCompanyPin', async (request) => {
 Parse.Cloud.define("getVoucherForLocation", async (request) => {
   var params = request.params;
 
-
+  console.log(params);
   // Create a new instance of that class.
-  var _location = new Company();
+  var _location = new Location();
   _location.id = params.locationObjectId;
 
   var q_voucher = new Parse.Query(Voucher);
   q_voucher.equalTo('location', _location);
-  const results = await q_voucher.find()
+  const results = await q_voucher.find();
+
+  console.log(results);
 
   return results;
 });
