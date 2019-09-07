@@ -193,9 +193,8 @@ Parse.Cloud.define("getVoucherForLocation", async (request) => {
 
   var q_voucher = new Parse.Query(Voucher);
   q_voucher.equalTo('location', _location);
+  q_voucher.ascending("isfree");
   const results = await q_voucher.find();
-
-  console.log(results);
 
   return results;
 });
