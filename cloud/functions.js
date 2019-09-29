@@ -216,13 +216,11 @@ Parse.Cloud.define("getVoucherForLocation", async (request) => {
 
 
 
+/**
+** Checks if it's possible for this User to use this Voucher
+**/
 
-//
-// Redeem Voucher
-// voucher objectId 8QoyKFjtBc
-// User ObjectId
-//
-Parse.Cloud.define('redeemVoucher', async (request) => {
+Parse.Cloud.define('checkVoucherForUser', async (request) => {
   var params = request.params;
 
   // Check Params
@@ -250,13 +248,6 @@ Parse.Cloud.define('redeemVoucher', async (request) => {
   // Check Voucher
   if( voucherCosts <= usrPoints ){
     console.log("Voucher lässt sich einlösen");
-
-
-    // Distract Costs from user Points
-    // Create VoucherHistory ObjectId
-
-
-
     return {
       success : true,
     }
@@ -266,8 +257,38 @@ Parse.Cloud.define('redeemVoucher', async (request) => {
       msg : "voucherObjectId or userObjectId is missing"
     }
   }
+
 });
 
+
+
+
+//
+// Redeem Voucher
+// voucher objectId 8QoyKFjtBc
+// User ObjectId
+//
+Parse.Cloud.define('redeemVoucher', async (request) => {
+  var params = request.params;
+
+
+  // Distract Costs from user Points
+  // Create VoucherHistory ObjectId
+
+
+
+
+});
+
+
+
+
+function saveVoucherHistory(){
+
+
+
+
+}
 
 
 
@@ -290,50 +311,56 @@ Parse.Cloud.define('fetchLocations', async (request) => {
 
   }
 
+  console.log(params);
+
+  var userGeoPoint = new Parse.GeoPoint(params.userLocation.lat, params.userLocation.lon);
 
 
-    var q_locations = new Parse.Query(Location);
-    var _results = await q_locations.find();
+  // Create Query
+  var q_locations = new Parse.Query(Location);
+  q_locations.near("geo", userGeoPoint);
+
+  var _results = await q_locations.find();
 
 
 
   //
-    //console.log(_results[0])
-    //var res = await _results[0].relation("tags").query().each(function(tags) {
-    //   console.log(tags);
-    //});
-    //console.log(res);
+  //console.log(_results[0])
+  //var res = await _results[0].relation("tags").query().each(function(tags) {
+  //   console.log(tags);
+  //});
+  //console.log(res);
 
-    return _results;
+  return _results;
 
 
 
-//  console.log(_results);
+  //  console.log(_results);
 
 
   /*let query = new Parse.Query('Locations');
   query.find().then(function(results) {
-     var result = results[0];
-     result.relation('tags').query().each(function(tags) {
-        console.log(tags);
-     });
-  });*/
+  var result = results[0];
+  result.relation('tags').query().each(function(tags) {
+  console.log(tags);
+});
+});*/
 
 
 
 
-  //var tags = ["FVqUQeiuWI", "J3QanKBQCA"];
-  //for( var i = 0; i<tags.length; i++){
-    //var _qtag = new Tag({
-    //  objectId : tags[i]
-  //  });
+//var tags = ["FVqUQeiuWI", "J3QanKBQCA"];
+//for( var i = 0; i<tags.length; i++){
+//var _qtag = new Tag({
+//  objectId : tags[i]
+//  });
 
 
-    //q_locations.equalTo("tags", _qtag);
-    //var fewWins = new Parse.Query("Location");
-    //fewWins.lessThan("wins", 5);
+//q_locations.equalTo("tags", _qtag);
+//var fewWins = new Parse.Query("Location");
+//fewWins.lessThan("wins", 5);
 
-  //}
+//}
 
 
 //  q_locations.containsAll("tags", ["FVqUQeiuWI", "J3QanKBQCA"]);
