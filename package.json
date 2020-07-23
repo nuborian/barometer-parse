@@ -15,7 +15,7 @@
     "kerberos": "~0.0.x",
     "moment": "^2.23.0",
     "moment-random": "^1.0.5",
-    "parse": "~1.8.0",
+    "parse": "~2.10.0",
     "parse-server": "*",
     "random-location": "^1.0.12",
     "request": "^2.88.0",
