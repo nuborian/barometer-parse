@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^3.2.2",
     "express": "~4.11.x",
     "ip": "^1.1.5",
     "kerberos": "~0.0.x",
